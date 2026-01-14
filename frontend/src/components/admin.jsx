@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import IssueCertificateModal from "../components/IssueCertificateModal";
 
 const Admin = () => {
   const navigate = useNavigate();
   const [showForm, setShowForm] = useState(false);
+  const [showIssue, setShowIssue] = useState(false);
 
   const [form, setForm] = useState({
     fullName: "",
@@ -41,10 +43,9 @@ const Admin = () => {
 
       setShowForm(false);
     } catch (err) {
-  console.log(err);
-  alert(JSON.stringify(err.response?.data || err.message));
-}
-
+      console.log(err);
+      alert(JSON.stringify(err.response?.data || err.message));
+    }
   };
 
   return (
@@ -95,7 +96,10 @@ const Admin = () => {
               Upload the PDF, generate its cryptographic hash, and register it
               on the blockchain.
             </p>
-            <button className="mt-auto px-4 py-2 rounded-md bg-[#F5C84C] text-[#0B1F3A] font-medium hover:bg-[#FFD86B] transition">
+            <button
+              onClick={() => setShowIssue(true)}
+              className="mt-auto px-4 py-2 rounded-md bg-[#F5C84C] text-[#0B1F3A] font-medium hover:bg-[#FFD86B] transition"
+            >
               Open
             </button>
           </div>
@@ -126,7 +130,7 @@ const Admin = () => {
           © 2026 Certificate Chain | Admin Access
         </div>
 
-        {/* Form Modal */}
+        {/* Register Student Modal */}
         {showForm && (
           <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
             <form
@@ -169,6 +173,9 @@ const Admin = () => {
             </form>
           </div>
         )}
+
+        {/* Issue Certificate Modal */}
+        {showIssue && <IssueCertificateModal onClose={() => setShowIssue(false)} />}
       </div>
     </div>
   );
