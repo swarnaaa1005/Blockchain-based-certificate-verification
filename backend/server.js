@@ -3,8 +3,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 
-const cors = require("cors");
-app.use(cors());
+
 
 dotenv.config();
 connectDB();

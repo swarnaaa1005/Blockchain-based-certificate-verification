@@ -14,7 +14,6 @@ exports.registerStudent = async (req, res) => {
       return res.status(400).json({ message: "Student already exists" });
     }
 
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const student = await Student.create({
