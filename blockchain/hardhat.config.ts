@@ -1,9 +1,8 @@
-import hardhatToolboxMochaEthersPlugin from "@nomicfoundation/hardhat-toolbox-mocha-ethers";
-import { configVariable, defineConfig } from "hardhat/config";
+import "@nomicfoundation/hardhat-ethers";
+import { defineConfig } from "hardhat/config";
+import "dotenv/config";
 
 export default defineConfig({
-  plugins: [hardhatToolboxMochaEthersPlugin],
-
   solidity: {
     version: "0.8.20",
     settings: {
@@ -17,18 +16,18 @@ export default defineConfig({
   networks: {
     ganache: {
       type: "http",
-      chainType: "l1",
       url: "http://127.0.0.1:7545",
       accounts: {
         mnemonic: "test test test test test test test test test test test junk",
       },
     },
 
-    sepolia: {
-      type: "http",
-      chainType: "l1",
-      url: configVariable("SEPOLIA_RPC_URL"),
-      accounts: [configVariable("SEPOLIA_PRIVATE_KEY")],
-    },
+    // sepolia: {
+    //   type: "http",
+    //   url: process.env.SEPOLIA_RPC_URL || "",
+    //   accounts: process.env.SEPOLIA_PRIVATE_KEY
+    //     ? [process.env.SEPOLIA_PRIVATE_KEY]
+    //     : [],
+    // },
   },
 });
