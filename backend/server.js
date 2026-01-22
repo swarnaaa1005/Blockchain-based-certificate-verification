@@ -9,21 +9,17 @@ connectDB();
 
 const app = express();
 
-/* ================= MIDDLEWARE ================= */
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); // ✅ needed for form-data
+app.use(express.urlencoded({ extended: true }));
 
-/* ================= ROUTES ================= */
+// Routes
 app.use("/api/students", require("./routes/studentRoutes"));
 app.use("/api/certificates", require("./routes/certificateRoutes"));
 
-/* ================= STATIC FILES ================= */
-// Allows browser access to generated PDFs
+// Serve uploaded certificates
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-/* ================= SERVER ================= */
+// Server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () =>
-  console.log(`🚀 Server running on http://localhost:${PORT}`)
-);
+app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));

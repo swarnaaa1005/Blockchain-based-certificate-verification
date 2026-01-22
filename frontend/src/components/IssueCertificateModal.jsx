@@ -50,10 +50,19 @@ const IssueCertificateModal = ({ onClose }) => {
     fd.append("pdf", pdfBlob, `${form.registerNumber}.pdf`);
     fd.append("meta", JSON.stringify(form));
 
-    await axios.post("http://localhost:5000/api/certificates/issue", fd);
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/certificates/issue",
+        fd,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
 
-    alert("Certificate issued successfully");
-    onClose();
+      alert(`Certificate issued successfully! SHA-256: ${res.data.pdfHash}`);
+      onClose();
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.message || "Issue failed");
+    }
   };
 
   return (
@@ -74,6 +83,7 @@ const IssueCertificateModal = ({ onClose }) => {
             value={form[f]}
             onChange={handleChange}
             className="w-full mb-3 px-3 py-2 rounded-lg bg-[#0B1F3A] border border-[#F5C84C]/30 text-white"
+            required
           />
         ))}
 
