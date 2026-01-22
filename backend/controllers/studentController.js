@@ -59,6 +59,7 @@ exports.loginStudent = async (req, res) => {
         email: student.email,
         course: student.course,
         year: student.year,
+        certificates: student.certificates, // 👈 send issued certificates
       },
     });
   } catch (err) {

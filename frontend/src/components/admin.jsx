@@ -107,7 +107,7 @@ const Admin = () => {
           {/* Card 3 */}
           <div className="bg-[#0F2747]/80 backdrop-blur rounded-2xl p-6 shadow-lg border border-[#F5C84C]/30">
             <h3 className="text-lg font-semibold text-[#F5C84C] mb-3">
-              3. View All Records
+              3. Certificates Requests
             </h3>
             <p className="text-sm text-slate-200 mb-4">
               Browse and manage all registered students and issued certificates.

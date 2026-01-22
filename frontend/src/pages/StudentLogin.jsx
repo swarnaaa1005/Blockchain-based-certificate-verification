@@ -1,26 +1,30 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function StudentLogin() {
   const [regNo, setRegNo] = useState("");
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
-
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:5000/api/students/login", {
-        registerNumber: regNo,
-        password,
-      });
+      const res = await axios.post(
+        "http://localhost:5000/api/students/login",
+        {
+          registerNumber: regNo,
+          password,
+        }
+      );
 
-      // Save student data for dashboard use
+      // Save logged-in student data
       localStorage.setItem("student", JSON.stringify(res.data.student));
+
+      setMsg("Login successful. Loading certificates...");
 
       // Redirect to dashboard
       navigate("/student/dashboard");
@@ -47,7 +51,7 @@ export default function StudentLogin() {
               type="text"
               value={regNo}
               onChange={(e) => setRegNo(e.target.value)}
-              className="w-full rounded-xl px-4 py-2 bg-[#0B1F3A] border border-[#F5C84C]/40 focus:outline-none focus:ring-2 focus:ring-[#F5C84C]"
+              className="w-full rounded-xl px-4 py-2 bg-[#0B1F3A] border border-[#F5C84C]/40"
               required
             />
           </div>
@@ -58,14 +62,14 @@ export default function StudentLogin() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-xl px-4 py-2 bg-[#0B1F3A] border border-[#F5C84C]/40 focus:outline-none focus:ring-2 focus:ring-[#F5C84C]"
+              className="w-full rounded-xl px-4 py-2 bg-[#0B1F3A] border border-[#F5C84C]/40"
               required
             />
           </div>
 
           <button
             type="submit"
-            className="w-full rounded-xl px-4 py-2 font-medium bg-[#F5C84C] text-[#0B1F3A] hover:bg-[#FFD86B] transition"
+            className="w-full rounded-xl px-4 py-2 font-medium bg-[#F5C84C] text-[#0B1F3A]"
           >
             Submit
           </button>
