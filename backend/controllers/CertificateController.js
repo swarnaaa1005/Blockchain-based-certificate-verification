@@ -1,6 +1,11 @@
 const Student = require("../models/Student");
+const {
+  storeCertificateOnChain,
+} = require("../blockchain/certificateChain");
 
-// Student requests certificate
+/* =====================================================
+   STUDENT REQUESTS CERTIFICATE
+   ===================================================== */
 exports.requestCertificate = async (req, res) => {
   const { registerNumber } = req.body;
 
@@ -14,7 +19,9 @@ exports.requestCertificate = async (req, res) => {
   res.json({ message: "Certificate request sent" });
 };
 
-// Admin approves certificate
+/* =====================================================
+   ADMIN APPROVES & ISSUES CERTIFICATE (BLOCKCHAIN ADDED)
+   ===================================================== */
 exports.approveCertificate = async (req, res) => {
   const { registerNumber } = req.params;
 
@@ -25,16 +32,32 @@ exports.approveCertificate = async (req, res) => {
     });
   }
 
+  // 🔐 HASH ALREADY GENERATED FROM PDF
+  const pdfHash = student.certificate.hash;
+
+  // 🔗 STORE HASH ON BLOCKCHAIN
+  const txHash = await storeCertificateOnChain({
+    studentName: student.fullName,
+    registerNumber: student.registerNumber,
+    course: student.course,
+    year: student.year,
+    pdfHash,
+  });
+
+  // Update DB
   student.certificateStatus = "issued";
+  student.blockchainTx = txHash;
   await student.save();
 
   res.json({
-    message: "Certificate issued successfully",
-    pdfPath: student.certificate.pdfPath,
+    message: "Certificate issued & stored on blockchain",
+    blockchainTx: txHash,
   });
 };
 
-// Admin view all requests
+/* =====================================================
+   ADMIN VIEW ALL CERTIFICATE REQUESTS
+   ===================================================== */
 exports.getCertificateRequests = async (req, res) => {
   const requests = await Student.find({
     certificateStatus: "requested",

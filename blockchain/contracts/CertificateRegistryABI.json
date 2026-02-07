@@ -1,0 +1,98 @@
+[
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "registerNumber",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "pdfHash",
+				"type": "string"
+			}
+		],
+		"name": "CertificateIssued",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_studentName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_registerNumber",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_course",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_year",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_pdfHash",
+				"type": "string"
+			}
+		],
+		"name": "issueCertificate",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_registerNumber",
+				"type": "string"
+			}
+		],
+		"name": "verifyCertificate",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]

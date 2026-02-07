@@ -24,7 +24,7 @@ export default function IndexPage() {
       title: "Student Portal",
       desc: "Log in to view, download, and share your officially issued certificates.",
       btn: "Enter Student →",
-      icon: <GraduationCap className="w-8 h-8" />,
+      icon: <GraduationCap className="w-8 h-8 " />,
       action: () => navigate("/student"),
     },
   ];

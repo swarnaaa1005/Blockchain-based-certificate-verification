@@ -80,17 +80,17 @@ const Admin = () => {
           </div>
 
           {/* Card 2: Issue Certificate */}
-          <div className="bg-[#0F2747]/80 backdrop-blur rounded-2xl p-6 shadow-lg border border-[#F5C84C]/30">
+          <div className="bg-[#0F2747]/80 backdrop-blur rounded-2xl p-6 shadow-lg border border-[#F5C84C]/30 hover:scale-105 transition">
             <h3 className="text-lg font-semibold text-[#F5C84C] mb-3">2. Issue Certificate</h3>
             <p className="text-sm text-slate-200 mb-4">Upload the PDF, generate its hash, and register it on blockchain.</p>
             <button onClick={() => setShowIssue(true)} className="mt-auto px-4 py-2 rounded-md bg-[#F5C84C] text-[#0B1F3A] font-medium hover:bg-[#FFD86B] transition">Open</button>
           </div>
 
           {/* Card 3: Requests */}
-          <div className="bg-[#0F2747]/80 backdrop-blur rounded-2xl p-6 shadow-lg border border-[#F5C84C]/30">
+          <div className="bg-[#0F2747]/80 backdrop-blur rounded-2xl p-6 shadow-lg border border-[#F5C84C]/30 hover:scale-105 transition">
             <h3 className="text-lg font-semibold text-[#F5C84C] mb-3">3. Certificate Requests</h3>
             <p className="text-sm text-slate-200 mb-4">View and approve pending certificate requests.</p>
-            <button onClick={fetchRequests} className="mt-auto px-4 py-2 rounded-md bg-[#F5C84C] text-[#0B1F3A] font-medium hover:bg-[#FFD86B] transition">Refresh</button>
+            <button onClick={fetchRequests} className="mt-auto px-4 py-2 rounded-md bg-[#F5C84C] text-[#0B1F3A] font-medium hover:bg-[#FFD86B] transition">Open</button>
           </div>
         </div>
 
