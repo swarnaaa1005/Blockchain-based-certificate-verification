@@ -80,6 +80,54 @@ router.post("/issue", upload.single("pdf"), async (req, res) => {
     });
   }
 });
+
+
+
+// VERIFY CERTIFICATE
+router.post("/verify", upload.single("pdf"), async (req, res) => {
+  try {
+    const { registerNumber } = req.body;
+
+    if (!registerNumber || !req.file) {
+      return res.status(400).json({ message: "Missing data" });
+    }
+
+    // 1️⃣ Read uploaded PDF
+    const fileBuffer = fs.readFileSync(req.file.path);
+
+    // 2️⃣ Hash PDF
+    const uploadedHash = crypto
+      .createHash("sha256")
+      .update(fileBuffer)
+      .digest("hex");
+
+    // 3️⃣ Fetch certificate from blockchain
+    const cert = await contract.getCertificate(registerNumber);
+
+    if (!cert || cert.pdfHash === "") {
+      return res.status(404).json({ message: "Certificate not found on blockchain" });
+    }
+
+    // 4️⃣ Compare hashes
+    const isValid = uploadedHash === cert.pdfHash;
+
+    res.json({
+      valid: isValid,
+      blockchainHash: cert.pdfHash,
+      uploadedHash,
+      studentName: cert.studentName,
+      course: cert.course,
+      year: cert.year
+    });
+
+  } catch (err) {
+    console.error("Verification error:", err);
+    res.status(500).json({ message: "Verification failed" });
+  }
+});
+
+
+
 // ================= Student Requests Certificate =================
 router.post("/request", async (req, res) => {
   try {

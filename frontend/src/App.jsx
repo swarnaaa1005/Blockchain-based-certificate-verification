@@ -3,6 +3,7 @@ import Portal from "./components/index";
 import Admin from "./components/admin";
 import StudentLogin from "./pages/StudentLogin";
 import StudentDashboard from "./pages/StudentDashboard";
+import Verifier from "./pages/Verifier";
 
 function App() {
   return (
@@ -13,12 +14,13 @@ function App() {
         <Route path="/admin" element={<Admin />} />
         <Route path="/student" element={<StudentLogin />} />
         <Route path="/student/dashboard" element={<StudentDashboard />} />
-      
+        
+      <Route path="/verifier" element={<Verifier />} />
 
         {/* Later you can add these pages */}
         {/* 
         
-        <Route path="/verifier" element={<Verifier />} />
+        
         <Route path="/student" element={<Student />} />
         */}
       </Routes>
