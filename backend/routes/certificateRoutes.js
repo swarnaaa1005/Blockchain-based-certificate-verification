@@ -3,7 +3,7 @@ const multer = require("multer");
 const crypto = require("crypto");
 const path = require("path");
 const Student = require("../models/Student");
-
+const contract = require("../blockchain/contract.cjs");
 const router = express.Router();
 
 // ================= Multer Setup =================
@@ -17,39 +17,69 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// ================= Issue Certificate (new PDF) =================
+// ================= Issue Certificate =================
 router.post("/issue", upload.single("pdf"), async (req, res) => {
   try {
     const { meta } = req.body;
     const studentData = JSON.parse(meta);
 
-    const student = await Student.findOne({ registerNumber: studentData.registerNumber });
-    if (!student) return res.status(404).json({ message: "Student not found" });
+    const student = await Student.findOne({
+      registerNumber: studentData.registerNumber
+    });
 
-    const pdfPath = req.file.filename;
+    if (!student) {
+      return res.status(404).json({ message: "Student not found" });
+    }
 
-    // SHA-256 hash of PDF
-    const fileBuffer = require("fs").readFileSync(req.file.path);
-    const pdfHash = crypto.createHash("sha256").update(fileBuffer).digest("hex");
+    // Read PDF
+    const fs = require("fs");
+    const fileBuffer = fs.readFileSync(req.file.path);
 
-    const newCert = {
-      title: `Certificate - ${studentData.course} (${studentData.year})`,
-      file: pdfPath,
+    // SHA-256 hash
+    const pdfHash = crypto
+      .createHash("sha256")
+      .update(fileBuffer)
+      .digest("hex");
+
+    console.log("🚀 Storing hash on blockchain:", pdfHash);
+
+    // 🔗 BLOCKCHAIN TRANSACTION
+    const tx = await contract.issueCertificate(
+      student.fullName,
+      student.registerNumber,
+      studentData.course,
+      studentData.year,
+      pdfHash
+    );
+
+    await tx.wait(); // wait for mining
+
+    // Save to MongoDB
+    student.certificates.push({
+      title: `Certificate - ${studentData.course}`,
+      file: req.file.filename,
       pdfHash,
-      status: "issued",
       issuedAt: new Date(),
-    };
+      status: "issued",
+      txHash: tx.hash
+    });
 
-    student.certificates.push(newCert);
     await student.save();
 
-    res.json({ message: "Certificate issued successfully", pdfHash, pdfPath });
+    res.json({
+      message: "Certificate generated & hash stored on blockchain",
+      pdfHash,
+      transactionHash: tx.hash
+    });
+
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Issue failed", error: err.message });
+    console.error("❌ Blockchain Error:", err);
+    res.status(500).json({
+      message: "Certificate issue failed",
+      error: err.message
+    });
   }
 });
-
 // ================= Student Requests Certificate =================
 router.post("/request", async (req, res) => {
   try {
