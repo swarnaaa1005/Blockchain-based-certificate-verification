@@ -15,6 +15,9 @@ router.post("/verify", upload.single("pdf"), async (req, res) => {
       return res.status(400).json({ message: "Missing data" });
     }
 
+    console.log("Register Number:", registerNumber);
+    console.log("Uploaded File Path:", req.file.path);
+
     // 1️⃣ Hash uploaded PDF
     const buffer = fs.readFileSync(req.file.path);
     const uploadedHash = crypto
@@ -22,15 +25,25 @@ router.post("/verify", upload.single("pdf"), async (req, res) => {
       .update(buffer)
       .digest("hex");
 
-    // 2️⃣ Fetch from blockchain
+    console.log("Uploaded Hash:", uploadedHash);
+
+    // 2️⃣ Fetch certificate from blockchain
     const cert = await contract.verifyCertificate(registerNumber);
 
     if (!cert || cert[4] === "") {
+      console.log("Certificate not found on blockchain");
       return res.status(404).json({ message: "Certificate not found" });
     }
 
+    console.log("Blockchain Hash:", cert[4]);
+
     // 3️⃣ Compare hashes
     const isValid = uploadedHash === cert[4];
+
+    console.log("Hash Match:", isValid);
+
+    // Delete temporary uploaded file
+    fs.unlinkSync(req.file.path);
 
     res.json({
       valid: isValid,
@@ -41,8 +54,9 @@ router.post("/verify", upload.single("pdf"), async (req, res) => {
       blockchainHash: cert[4],
       uploadedHash
     });
+
   } catch (err) {
-    console.error(err);
+    console.error("Verification Error:", err);
     res.status(500).json({ message: "Verification failed" });
   }
 });

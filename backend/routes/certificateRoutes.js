@@ -5,6 +5,7 @@ const path = require("path");
 const Student = require("../models/Student");
 const contract = require("../blockchain/contract.cjs");
 const router = express.Router();
+const fs = require("fs");
 
 // ================= Multer Setup =================
 const storage = multer.diskStorage({
@@ -95,34 +96,43 @@ router.post("/verify", upload.single("pdf"), async (req, res) => {
     // 1️⃣ Read uploaded PDF
     const fileBuffer = fs.readFileSync(req.file.path);
 
-    // 2️⃣ Hash PDF
+    // 2️⃣ Generate hash
     const uploadedHash = crypto
       .createHash("sha256")
       .update(fileBuffer)
       .digest("hex");
 
-    // 3️⃣ Fetch certificate from blockchain
-    const cert = await contract.getCertificate(registerNumber);
+    console.log("Uploaded Hash:", uploadedHash);
 
-    if (!cert || cert.pdfHash === "") {
+    // 3️⃣ Fetch from blockchain
+    const cert = await contract.verifyCertificate(registerNumber);
+
+    const blockchainHash = cert[4]; // correct index
+
+    console.log("Blockchain Hash:", blockchainHash);
+
+    if (!blockchainHash) {
       return res.status(404).json({ message: "Certificate not found on blockchain" });
     }
 
     // 4️⃣ Compare hashes
-    const isValid = uploadedHash === cert.pdfHash;
+    const isValid = uploadedHash === blockchainHash;
+
+    console.log("Hash Match:", isValid);
 
     res.json({
       valid: isValid,
-      blockchainHash: cert.pdfHash,
-      uploadedHash,
-      studentName: cert.studentName,
-      course: cert.course,
-      year: cert.year
+      studentName: cert[0],
+      registerNumber: cert[1],
+      course: cert[2],
+      year: cert[3],
+      blockchainHash: blockchainHash,
+      uploadedHash
     });
 
   } catch (err) {
     console.error("Verification error:", err);
-    res.status(500).json({ message: "Verification failed" });
+    res.status(500).json({ message: "Verification" });
   }
 });
 

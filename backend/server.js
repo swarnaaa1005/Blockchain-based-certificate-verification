@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use("/api/students", require("./routes/studentRoutes"));
 app.use("/api/certificates", require("./routes/certificateRoutes"));
-app.use("/api/certificates", verifyRoute);
+app.use("/api/certificates", require("./routes/verify"));
 
 // Serve uploaded certificates
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));

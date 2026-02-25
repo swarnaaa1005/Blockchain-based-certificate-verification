@@ -15,6 +15,7 @@ const contract = new ethers.Contract(
   wallet
 );
 
+
 /* 🔽 ADD THIS HERE (BOTTOM) */
 (async () => {
   const balance = await provider.getBalance(wallet.address);
