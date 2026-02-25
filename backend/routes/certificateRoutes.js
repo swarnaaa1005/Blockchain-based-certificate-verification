@@ -131,7 +131,7 @@ router.post("/verify", upload.single("pdf"), async (req, res) => {
     });
 
   } catch (err) {
-    console.error("Verification error:", err);
+    console.error("Verification error occured:", err);
     res.status(500).json({ message: "Verification failed" });
   }
 });
