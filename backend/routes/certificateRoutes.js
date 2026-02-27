@@ -225,7 +225,7 @@ router.get("/student/:regNo", async (req, res) => {
 
     res.json({ certificates: student.certificates });
   } catch (err) {
-    res.status(500).json({ message: "Fetch failed" });
+    res.status(500).json({ message: "Fetching failed" });
   }
 });
 
