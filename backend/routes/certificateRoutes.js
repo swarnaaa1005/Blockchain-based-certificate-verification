@@ -112,7 +112,7 @@ router.post("/verify", upload.single("pdf"), async (req, res) => {
     console.log("Blockchain Hash:", blockchainHash);
 
     if (!blockchainHash) {
-      return res.status(404).json({ message: "Certificate not found " });
+      return res.status(404).json({ message: "Certificate not found on blockchain" });
     }
 
     // 4️⃣ Compare hashes
