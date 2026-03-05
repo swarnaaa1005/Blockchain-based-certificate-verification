@@ -168,7 +168,7 @@ router.post("/approve/:regNo/:certId", async (req, res) => {
     const { regNo, certId } = req.params;
 
     const student = await Student.findOne({ registerNumber: regNo });
-    if (!student) return res.status(404).json({ message: "Student not found" });
+    if (!student) return res.status(404).json({ message: "Student not found..." });
 
     const cert = student.certificates.id(certId);
     if (!cert) return res.status(404).json({ message: "Certificate not found" });
