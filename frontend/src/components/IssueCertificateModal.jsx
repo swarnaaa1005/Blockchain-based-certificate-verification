@@ -16,36 +16,124 @@ const IssueCertificateModal = ({ onClose }) => {
   const generateAndSend = async (e) => {
     e.preventDefault();
 
-    // 1. Generate PDF in browser
-    const doc = new jsPDF("landscape");
-    doc.setFillColor(11, 31, 58);
+    const doc = new jsPDF("landscape", "mm", "a4");
+
+    // ================= BACKGROUND =================
+    doc.setFillColor(248, 249, 250);
     doc.rect(0, 0, 297, 210, "F");
 
-    doc.setTextColor(245, 200, 76);
-    doc.setFontSize(28);
-    doc.text("Certificate of Achievement", 148, 40, { align: "center" });
+    // ================= BORDER =================
+    doc.setDrawColor(0, 51, 102);
+    doc.setLineWidth(4);
+    doc.rect(10, 10, 277, 190);
+
+    doc.setLineWidth(1);
+    doc.rect(15, 15, 267, 180);
+
+    // ================= UNIVERSITY LOGO (CREST) =================
+    doc.setDrawColor(0, 51, 102);
+    doc.setFillColor(0, 51, 102);
+    doc.circle(148, 32, 12, "F");
 
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(16);
-    doc.text("This is proudly presented to", 148, 70, { align: "center" });
+    doc.setFontSize(12);
+    doc.setFont("times", "bold");
+    doc.text("CU", 148, 34, { align: "center" });
 
-    doc.setFontSize(24);
-    doc.text(form.fullName, 148, 90, { align: "center" });
+    // ================= UNIVERSITY NAME =================
+    doc.setTextColor(0, 51, 102);
+    doc.setFontSize(28);
+    doc.setFont("times", "bold");
+    doc.text("CERTIFICATE CHAIN UNIVERSITY", 148, 50, { align: "center" });
 
+    doc.setFontSize(12);
+    doc.setFont("times", "italic");
+    doc.text("Office of Academic Records", 148, 58, { align: "center" });
+
+    // ================= GOLD RIBBON =================
+    doc.setFillColor(212, 175, 55);
+    doc.rect(65, 65, 170, 10, "F");
+
+    doc.setTextColor(0, 0, 0);
     doc.setFontSize(14);
+    doc.setFont("times", "bold");
+    doc.text("OFFICIAL CERTIFICATE", 148, 72, { align: "center" });
+
+    // ================= CERTIFICATE TITLE =================
+    doc.setFontSize(34);
+    doc.setFont("times", "bold");
+    doc.setTextColor(0, 51, 102);
+    doc.text("CERTIFICATE OF ACHIEVEMENT", 148, 95, { align: "center" });
+
+    // ================= BODY TEXT =================
+    doc.setFontSize(16);
+    doc.setFont("times", "normal");
+    doc.text("This certificate is proudly presented to", 148, 115, {
+      align: "center",
+    });
+
+    // ================= STUDENT NAME =================
+    doc.setFontSize(30);
+    doc.setFont("times", "bold");
+    doc.text(form.fullName.toUpperCase(), 148, 130, { align: "center" });
+
+    // ================= COURSE TEXT =================
+    doc.setFontSize(16);
+    doc.setFont("times", "normal");
     doc.text(
-      `Register No: ${form.registerNumber}\nCourse: ${form.course}\nYear: ${form.year}`,
+      "for successfully completing the academic requirements of the course",
       148,
-      120,
+      145,
       { align: "center" }
     );
 
+    // ================= COURSE NAME =================
+    doc.setFontSize(22);
+    doc.setFont("times", "bold");
+    doc.text(form.course, 148, 158, { align: "center" });
+
+    // ================= REGISTER NUMBER =================
+    doc.setFontSize(14);
+    doc.setFont("times", "normal");
+    doc.text(`Register Number: ${form.registerNumber}`, 90, 172);
+
+    doc.text(`Academic Year: ${form.year}`, 180, 172);
+
+    // ================= GOLD SEAL =================
+    doc.setFillColor(212, 175, 55);
+    doc.circle(50, 145, 15, "F");
+
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(9);
+    doc.text("OFFICIAL", 50, 143, { align: "center" });
+    doc.text("SEAL", 50, 148, { align: "center" });
+
+    // ================= DATE =================
+    const date = new Date().toLocaleDateString();
+    doc.setTextColor(0);
     doc.setFontSize(12);
-    doc.text("Issued by Certificate Chain", 148, 160, { align: "center" });
+    doc.text(`Date Issued: ${date}`, 40, 185);
+
+    // ================= SIGNATURES =================
+    doc.line(180, 180, 230, 180);
+    doc.text("Controller of Examinations", 205, 188, { align: "center" });
+
+    doc.line(235, 180, 285, 180);
+    doc.text("Registrar", 260, 188, { align: "center" });
+
+    // ================= FOOTER =================
+    doc.setFontSize(9);
+    doc.setTextColor(120);
+    doc.text(
+      "This certificate is digitally secured and verifiable using Blockchain Certificate Registry",
+      148,
+      200,
+      { align: "center" }
+    );
 
     const pdfBlob = doc.output("blob");
 
-    // 2. Send to backend
+    // ================= SEND TO BACKEND =================
     const fd = new FormData();
     fd.append("pdf", pdfBlob, `${form.registerNumber}.pdf`);
     fd.append("meta", JSON.stringify(form));
@@ -57,7 +145,7 @@ const IssueCertificateModal = ({ onClose }) => {
         { headers: { "Content-Type": "multipart/form-data" } }
       );
 
-      alert(`Certificate issued successfully! SHA-256: ${res.data.pdfHash}`);
+      alert(`Certificate issued successfully!\nSHA256: ${res.data.pdfHash}`);
       onClose();
     } catch (err) {
       console.error(err);
