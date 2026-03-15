@@ -156,7 +156,7 @@ router.post("/request", async (req, res) => {
     cert.status = "requested";
     await student.save();
 
-    res.json({ message: "Certificate request sent to admin" });
+    res.json({ message: "Certificate request sent to admin..." });
   } catch (err) {
     res.status(500).json({ message: "Request failed", error: err.message });
   }
