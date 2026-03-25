@@ -6,6 +6,15 @@ const Student = require("../models/Student");
 const contract = require("../blockchain/contract.cjs");
 const router = express.Router();
 const fs = require("fs");
+const { create } = require("ipfs-http-client");
+
+//ipfs storage
+const ipfs = create({
+  host: "127.0.0.1",
+  port: 5001,
+  protocol: "http"
+});
+
 
 // ================= Multer Setup =================
 const storage = multer.diskStorage({
@@ -33,8 +42,20 @@ router.post("/issue", upload.single("pdf"), async (req, res) => {
     }
 
     // Read PDF
-    const fs = require("fs");
     const fileBuffer = fs.readFileSync(req.file.path);
+    // Upload certificate to IPFS
+
+
+console.log("Uploading file to IPFS...");
+
+const ipfsResult = await ipfs.add({
+  content: fileBuffer
+});
+
+const ipfsCID = ipfsResult.cid.toString();
+
+console.log("IPFS CID:", ipfsCID);
+
 
     // SHA-256 hash
     const pdfHash = crypto
@@ -60,6 +81,7 @@ router.post("/issue", upload.single("pdf"), async (req, res) => {
       title: `Certificate - ${studentData.course}`,
       file: req.file.filename,
       pdfHash,
+      ipfsCID: ipfsCID,
       issuedAt: new Date(),
       status: "issued",
       txHash: tx.hash

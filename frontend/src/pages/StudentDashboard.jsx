@@ -75,6 +75,11 @@ export default function StudentDashboard() {
                   <p className="text-xs text-slate-300 break-all">
                     SHA-256: {cert.pdfHash}
                   </p>
+                  <p className="text-xs text-slate-300 break-all">
+                    IPFS CID : {cert.ipfsCID},
+                  </p>
+                  <p className="text-xs text-slate-300 break-all">http://127.0.0.1:8080/ipfs/{cert.ipfsCID}</p>
+            
                 </>
               )}
             </div>

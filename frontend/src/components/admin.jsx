@@ -8,6 +8,7 @@ const Admin = () => {
   const [showForm, setShowForm] = useState(false);
   const [showIssue, setShowIssue] = useState(false);
   const [requests, setRequests] = useState([]);
+  const [students, setStudents] = useState([]);
 
   const [form, setForm] = useState({
     fullName: "",
@@ -46,6 +47,20 @@ const Admin = () => {
   useEffect(() => {
     fetchRequests();
   }, []);
+  
+
+const fetchStudents = async () => {
+  console.log("Button clicked");
+
+  try {
+    const res = await axios.get("http://localhost:5000/api/students/all");
+    console.log("DATA:", res.data);
+    setStudents(res.data);
+  } catch (err) {
+    console.error("ERROR:", err);
+  }
+};
+
 
   // Approve a request
   const approveRequest = async (regNo, certId) => {
@@ -66,12 +81,12 @@ const Admin = () => {
         <h1 className="text-xl font-semibold text-[#F5C84C]">Certificate Admin Panel</h1>
         <button onClick={() => navigate("/")} className="px-4 py-2 rounded-lg bg-[#F5C84C] text-[#0B1F3A] font-medium hover:bg-[#FFD86B] transition">Logout</button>
       </div>
-
+    
       {/* Main Content */}
       <div className="flex flex-col items-center justify-center px-6 py-16">
         <h2 className="text-3xl font-bold mb-12 text-[#F5C84C]">Admin Actions</h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl w-full">
+       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl w-full justify-center">
           {/* Card 1: Register Student */}
           <div className="bg-[#0F2747]/80 backdrop-blur rounded-2xl p-6 shadow-lg border border-[#F5C84C]/30 hover:scale-105 transition">
             <h3 className="text-lg font-semibold text-[#F5C84C] mb-3">1. Register New Student</h3>
@@ -86,15 +101,16 @@ const Admin = () => {
             <button onClick={() => setShowIssue(true)} className="mt-auto px-4 py-2 rounded-md bg-[#F5C84C] text-[#0B1F3A] font-medium hover:bg-[#FFD86B] transition">Open</button>
           </div>
 
-          {/* Card 3: Requests */}
-          <div className="bg-[#0F2747]/80 backdrop-blur rounded-2xl p-6 shadow-lg border border-[#F5C84C]/30 hover:scale-105 transition">
+  
+        {/* Card 3: Requests */}
+          {/* <div className="bg-[#0F2747]/80 backdrop-blur rounded-2xl p-6 shadow-lg border border-[#F5C84C]/30 hover:scale-105 transition">
             <h3 className="text-lg font-semibold text-[#F5C84C] mb-3">3. Certificate Requests</h3>
             <p className="text-sm text-slate-200 mb-4">View and approve pending certificate requests.</p>
             <button onClick={fetchRequests} className="mt-auto px-4 py-2 rounded-md bg-[#F5C84C] text-[#0B1F3A] font-medium hover:bg-[#FFD86B] transition">Open</button>
-          </div>
+          </div> */}
         </div>
 
-        {/* Requests Table */}
+        {/* Requests Table
         {requests.length > 0 && (
           <div className="mt-12 w-full max-w-4xl bg-[#0F2747]/70 p-4 rounded-lg border border-[#F5C84C]/30">
             <h3 className="text-lg font-semibold text-[#F5C84C] mb-4">Pending Requests</h3>
@@ -126,7 +142,9 @@ const Admin = () => {
               </tbody>
             </table>
           </div>
-        )}
+        )} */}
+
+        
 
         {/* Register Student Modal */}
         {showForm && (

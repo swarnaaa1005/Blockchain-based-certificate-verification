@@ -11,7 +11,7 @@ export default function IndexPage() {
       desc: "Issue certificates, upload records, and manage student accounts securely.",
       btn: "Enter Admin →",
       icon: <ShieldCheck className="w-8 h-8" />,
-      action: () => navigate("/admin"),
+      action: () => navigate("/admin-login"),
     },
     {
       title: "Verifier",

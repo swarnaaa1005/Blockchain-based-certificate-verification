@@ -10,6 +10,16 @@ const certificateSchema = new mongoose.Schema({
 
   pdfHash: { type: String, required: true }, // blockchain hash
 
+  // ✅ IPFS Content ID (unique identifier from IPFS)
+  ipfsCID: { 
+    type: String 
+  },
+
+  // ✅ IPFS Gateway URL (used to view/download PDF)
+  ipfsURL: { 
+    type: String 
+  },
+
   issuedAt: { type: Date },
 
   status: {
